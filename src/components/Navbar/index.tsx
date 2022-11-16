@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -10,46 +9,75 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  useDisclosure,
-  useColorModeValue,
-  Stack,
-  useColorMode,
   Center,
   IconButton,
-  chakra,
   Image,
   Text
 } from '@chakra-ui/react';
 import { BsBell, BsHeart, BsSearch } from "react-icons/bs";
 import beWisely from "../../assets/navbar/beWisely.png"
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
-);
-
+import noData from "../../assets/noData.svg"
 export const NavBar = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Box bg={'white'} px={10}>
-        <Flex h={20} alignItems={'center'} justifyContent={'space-between'}>
+      <Box bg={'white'} >
+        <Flex h={20} alignItems={'center'} justifyContent={'space-between'} px={'3%'} m={'auto'}>
           <Flex gap={5}>
-            <IconButton icon={<BsSearch />} fontSize={'2xl'} aria-label={'search'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
-            <IconButton icon={<BsBell />} fontSize={'2xl'} aria-label={'notifications'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
+            <Link href={'/search'}>
+              <IconButton variant="unstyled" icon={<BsSearch />} fontSize={'2xl'} aria-label={'search'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
+            </Link>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'unstyled'}
+                cursor={'pointer'}
+                minW={0}>
+                <IconButton variant="unstyled" icon={<BsBell />} fontSize={'2xl'} aria-label={'notifications'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
+              </MenuButton>
+
+              <MenuList alignItems={'center'}>
+                <Box py={1}>
+                  <Center >
+                    <Text>Notificações</Text>
+                  </Center>
+                </Box>
+                <MenuDivider />
+                {/* <MenuItem><Avatar size={'sm'} />  Your Servers</MenuItem>
+                <MenuItem>Account Settings</MenuItem>
+                <MenuItem>Logout</MenuItem> */}
+                <MenuItem ><Image src={noData} alt='no Data' boxSize={'100'} mx={'auto'} /></MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
-          <Image src={beWisely} alt={'beWisely logo'} w={200} />
+          <Link href={'/'}>
+            <Image src={beWisely} alt={'beWisely logo'} w={200} />
+          </Link>
           <Flex alignItems={'center'} gap={5}>
-            <IconButton icon={<BsHeart />} fontSize={'2xl'} aria-label={'notifications'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'unstyled'}
+                cursor={'pointer'}
+                minW={0}>
+                <IconButton icon={<BsHeart />} fontSize={'2xl'} aria-label={'notifications'} _hover={{ bg: 'transparent' }} bg={'transparent'} />
+              </MenuButton>
+
+              <MenuList alignItems={'center'}>
+                <Box py={1}>
+                  <Center >
+                    <Text>Favoritos</Text>
+                  </Center>
+                </Box>
+                <MenuDivider />
+                {/* <MenuItem><Avatar size={'sm'} />  Your Servers</MenuItem>
+                <MenuItem>Account Settings</MenuItem>
+                <MenuItem>Logout</MenuItem> */}
+                <MenuItem ><Image src={noData} alt='no Data' boxSize={'100'} mx={'auto'} /></MenuItem>
+              </MenuList>
+            </Menu>
+
             <Menu>
               <MenuButton
                 as={Button}
