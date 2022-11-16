@@ -1,8 +1,8 @@
-import React, { Fragment, useRef, useState, ReactNode } from "react";
-import lodash_isEmpty from "lodash/isEmpty";
-import lodash_map from "lodash/map";
-import lodash_isNil from "lodash/isNil";
+import * as React from "react";
+import _ from "lodash";
+import { FcCalendar } from "react-icons/fc";
 import {
+  ChakraProvider,
   Box,
   Button,
   Divider,
@@ -16,14 +16,12 @@ import {
   SimpleGrid,
   Text,
   useOutsideClick,
-  VStack
-} from "@chakra-ui/react";
-import {
+  VStack,
+  Flex,
   InputGroup,
-  Input as InputComponent,
-  InputRightElement
+  InputLeftElement,
+  Center
 } from "@chakra-ui/react";
-import { FcCalendar } from "react-icons/fc";
 import {
   DateObj,
   useDayzed,
@@ -31,48 +29,28 @@ import {
   GetBackForwardPropsOptions,
   Calendar
 } from "dayzed";
-import { format } from "date-fns";
+import * as dateFns from "date-fns";
 
-const MONTH_NAMES_DEFAULT = [
+const MONTH_NAMES = [
   "Jan",
-  "Fev",
+  "Feb",
   "Mar",
-  "Abr",
-  "Mai",
+  "Apr",
+  "May",
   "Jun",
   "Jul",
-  "Ago",
-  "Set",
-  "Out",
+  "Aug",
+  "Sep",
+  "Oct",
   "Nov",
-  "Dez"
+  "Dec"
 ];
-const DAY_NAMES_DEFAULT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
-const DATE_FORMAT_DEFAULT = "dd-MM-yyyy";
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DATE_FORMAT = "dd/MM/yyyy";
 
 interface SingleDatepickerBackButtonsProps {
   calendars: Calendar[];
   getBackProps: (data: GetBackForwardPropsOptions) => Record<string, any>;
-}
-
-interface SingleDatepickerForwardButtonsProps {
-  calendars: Calendar[];
-  getForwardProps: (data: GetBackForwardPropsOptions) => Record<string, any>;
-}
-
-export interface SingleDatepickerProps {
-  disabled?: boolean;
-  onDateChange: (date: Date) => void;
-  id?: string;
-  name?: string;
-  date: Date;
-  configs?: SingleDatepickerConfigs;
-}
-
-export interface SingleDatepickerConfigs {
-  dateFormat: string;
-  monthNames: string[];
-  dayNames: string[];
 }
 
 const SingleDatepickerBackButtons = (
@@ -80,7 +58,7 @@ const SingleDatepickerBackButtons = (
 ) => {
   const { calendars, getBackProps } = props;
   return (
-    <Fragment>
+    <>
       <Button
         {...getBackProps({
           calendars,
@@ -94,16 +72,21 @@ const SingleDatepickerBackButtons = (
       <Button {...getBackProps({ calendars })} variant="ghost" size="sm">
         {"<"}
       </Button>
-    </Fragment>
+    </>
   );
 };
+
+interface SingleDatepickerForwardButtonsProps {
+  calendars: Calendar[];
+  getForwardProps: (data: GetBackForwardPropsOptions) => Record<string, any>;
+}
 
 const SingleDatepickerForwardButtons = (
   props: SingleDatepickerForwardButtonsProps
 ) => {
   const { calendars, getForwardProps } = props;
   return (
-    <Fragment>
+    <>
       <Button {...getForwardProps({ calendars })} variant="ghost" size="sm">
         {">"}
       </Button>
@@ -117,114 +100,139 @@ const SingleDatepickerForwardButtons = (
       >
         {">>"}
       </Button>
-    </Fragment>
+    </>
   );
 };
 
-const SingleDatepickerCalendar = (
-  props: RenderProps & { configs: SingleDatepickerConfigs }
-) => {
-  const {
-    calendars,
-    getDateProps,
-    getBackProps,
-    getForwardProps,
-    configs
-  } = props;
+const SingleDatepickerCalendar = (props: RenderProps) => {
+  const { calendars, getDateProps, getBackProps, getForwardProps } = props;
 
-  if (lodash_isEmpty(calendars)) {
+  if (_.isEmpty(calendars)) {
     return null;
   }
 
   return (
-    <HStack className="datepicker-calendar">
-      {lodash_map(calendars, (calendar) => {
-        return (
-          <VStack key={`${calendar.month}${calendar.year}`}>
-            <HStack>
-              <SingleDatepickerBackButtons
-                calendars={calendars}
-                getBackProps={getBackProps}
-              />
-              <Heading size="sm" textAlign="center">
-                {configs.monthNames[calendar.month]} {calendar.year}
-              </Heading>
-              <SingleDatepickerForwardButtons
-                calendars={calendars}
-                getForwardProps={getForwardProps}
-              />
-            </HStack>
-            <Divider />
-            <SimpleGrid columns={7} spacing={2} textAlign="center">
-              {lodash_map(configs.dayNames, (day) => (
-                <Box key={`${calendar.month}${calendar.year}${day}`}>
-                  <Text fontSize="sm" fontWeight="semibold">
-                    {day}
-                  </Text>
-                </Box>
-              ))}
-              {lodash_map(calendar.weeks, (week, weekIndex) => {
-                return lodash_map(week, (dateObj: DateObj, index) => {
-                  const {
-                    date,
-                    today,
-                    // prevMonth,
-                    // nextMonth,
-                    selected
-                  } = dateObj;
-                  const key = `${calendar.month}${calendar.year}${weekIndex}${index}`;
+    <Box>
+      <Center>
+        <HStack spacing={6} alignItems="baseline">
+          {_.map(calendars, (calendar) => {
+            return (
+              <VStack key={`${calendar.month}${calendar.year}`}>
+                <HStack>
+                  <SingleDatepickerBackButtons
+                    calendars={calendars}
+                    getBackProps={getBackProps}
+                  />
+                  <Heading size="xs" textAlign="center">
+                    {MONTH_NAMES[calendar.month]} {calendar.year}
+                  </Heading>
+                  <SingleDatepickerForwardButtons
+                    calendars={calendars}
+                    getForwardProps={getForwardProps}
+                  />
+                </HStack>
+                <Divider />
+                <SimpleGrid columns={7} spacing={1} textAlign="center">
+                  {_.map(DAY_NAMES, (day) => (
+                    <Box key={`${calendar.month}${calendar.year}${day}`}>
+                      <Text fontSize="xs" fontWeight="semibold">
+                        {day}
+                      </Text>
+                    </Box>
+                  ))}
+                  {_.map(calendar.weeks, (week, weekIndex) => {
+                    return _.map(week, (dateObj: DateObj, index) => {
+                      const {
+                        date,
+                        today,
+                        prevMonth,
+                        nextMonth,
+                        selected
+                      } = dateObj;
 
-                  return (
-                    <Button
-                      {...getDateProps({
-                        dateObj
-                        // disabled: isDisabled
-                      })}
-                      key={key}
-                      size="sm"
-                      variant="outline"
-                      borderColor={today ? "purple.400" : "transparent"}
-                      bg={selected ? "purple.200" : undefined}
-                    >
-                      {date.getDate()}
-                    </Button>
-                  );
-                });
-              })}
-            </SimpleGrid>
-          </VStack>
-        );
-      })}
-    </HStack>
+                      const key = `${calendar.month}${calendar.year}${weekIndex}${index}`;
+                      const isDisabled = prevMonth || nextMonth;
+
+                      const style = () => {
+                        const obj: any = {
+                          variant: "outline",
+                          borderColor: "transparent"
+                        };
+
+                        if (today) {
+                          obj.borderColor = "yellow.400";
+                        }
+
+                        if (selected) {
+                          obj.bg = "yellow.200";
+                        }
+
+                        return obj;
+                      };
+
+                      return (
+                        <Button
+                          {...getDateProps({
+                            dateObj,
+                            disabled: isDisabled
+                          })}
+                          key={key}
+                          size="xs"
+                          {...style()}
+                        >
+                          {date.getDate()}
+                        </Button>
+                      );
+                    });
+                  })}
+                </SimpleGrid>
+              </VStack>
+            );
+          })}
+        </HStack>
+      </Center>
+    </Box>
   );
 };
 
-export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
-  configs = {
-    dateFormat: DATE_FORMAT_DEFAULT,
-    monthNames: MONTH_NAMES_DEFAULT,
-    dayNames: DAY_NAMES_DEFAULT
-  },
-  ...props
-}) => {
-  const { date, name, disabled, onDateChange, id } = props;
+export interface SingleDatepickerProps {
+  value?: Date;
+  disabled?: boolean;
+  onChange: (date?: Date) => void;
+}
 
-  const ref = useRef<HTMLElement>(null);
-  const initialFocusRef = useRef<HTMLInputElement>(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
+export const SingleDatepicker = (props: SingleDatepickerProps) => {
+  const { value, disabled, onChange } = props;
 
-  const icon: ReactNode = <FcCalendar fontSize="sm" />;
+  const ref = React.useRef<HTMLElement>(null);
+  const initialFocusRef = React.useRef<HTMLInputElement>(null);
+
+  const [proposedDate, setProposedDate] = React.useState<string>(
+    value ? dateFns.format(value, DATE_FORMAT) : ""
+  );
+  const [popoverOpen, setPopoverOpen] = React.useState(false);
 
   useOutsideClick({
     ref: ref,
     handler: () => setPopoverOpen(false)
   });
 
+  const onChangePrime = (date?: Date) => {
+    onChange(date);
+    if (date) {
+      setProposedDate(dateFns.format(date, DATE_FORMAT));
+    }
+  };
+
   const onDateSelected = (options: { selectable: boolean; date: Date }) => {
     const { selectable, date } = options;
-    if (!selectable) return;
-    if (!lodash_isNil(date)) {
-      onDateChange(date);
+
+    if (!selectable) {
+      return;
+    }
+
+    if (!_.isNil(date)) {
+      onChangePrime(date);
       setPopoverOpen(false);
       return;
     }
@@ -233,7 +241,7 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
   const dayzedData = useDayzed({
     showOutsideDays: true,
     onDateSelected,
-    selected: date
+    selected: value
   });
 
   return (
@@ -247,29 +255,31 @@ export const SingleDatepicker: React.FC<SingleDatepickerProps> = ({
     >
       <PopoverTrigger>
         <InputGroup>
-          <InputComponent
-            id={id}
-            autoComplete="off"
-            background="white"
+          <InputLeftElement
+            pointerEvents='none'
+            children={<FcCalendar />}
+          />
+          <Input
+            bg="white"
+            value={proposedDate}
             isDisabled={disabled}
             ref={initialFocusRef}
             onClick={() => setPopoverOpen(!popoverOpen)}
-            name={name}
-            value={format(date, configs.dateFormat)}
-            onChange={(e) => e.target.value}
+            onChange={(e) => {
+              setProposedDate(e.target.value);
+            }}
+            onBlur={() => {
+              const d = dateFns.parse(proposedDate, DATE_FORMAT, new Date());
+              dateFns.isValid(d) ? onChangePrime(d) : onChangePrime(undefined);
+            }}
           />
-          <InputRightElement color="gray.500" children={icon} />
         </InputGroup>
       </PopoverTrigger>
       <PopoverContent ref={ref}>
-        <PopoverBody
-          padding={"10px 5px"}
-          borderWidth={1}
-          borderColor="blue.400"
-        >
-          <SingleDatepickerCalendar {...dayzedData} configs={configs} />
+        <PopoverBody>
+          <SingleDatepickerCalendar {...dayzedData} />
         </PopoverBody>
       </PopoverContent>
-    </Popover>
+    </Popover >
   );
 };
