@@ -4,8 +4,12 @@ import bookGirl from "../../assets/searchPage/1 - bookGirl.svg"
 import { FaUser } from "react-icons/fa"
 import { RiSearchLine } from "react-icons/ri";
 import { Footer } from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export const SearchPage = () => {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
   return (
     <Flex as={'section'} bg={'#0A2640'} h={'100vh'} direction={'column'} >
       <NavBar />
@@ -19,9 +23,9 @@ export const SearchPage = () => {
                 pointerEvents='none'
                 children={<RiSearchLine color='gray.300' />}
               />
-              <Input type='text' placeholder='Pesquisar' bg={'white'} borderRadius={'full'} />
+              <Input type='text' placeholder='Pesquisar' bg={'white'} borderRadius={'full'} value={query} onChange={(e) => setQuery(e.target.value)} />
             </InputGroup>
-            <IconButton icon={<RiSearchLine />} aria-label={"Pesquisar"} borderRadius={'full'} />
+            <IconButton icon={<RiSearchLine />} aria-label={"Pesquisar"} borderRadius={'full'} onClick={() => navigate(`/search/query=${query}`)} />
           </Flex>
         </Flex>
       </Flex>

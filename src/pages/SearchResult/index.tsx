@@ -1,13 +1,16 @@
 import { Box, Divider, Text, Flex, IconButton, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { NavBar } from "../../components/Navbar";
 
 export const SearchResultPage = () => {
   const { query } = useParams<{ query: string }>();
-  // const {data, error, isLoading} = useSearchResult(query);
-  // if(isLoading) return <Loading/>;
-  // if(error) return <Error/>;
+  useEffect(() => {
+    if (query) {
+
+    }
+  }, [])
   return (
     <Box>
       <NavBar />
