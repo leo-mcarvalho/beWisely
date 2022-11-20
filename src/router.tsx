@@ -1,7 +1,6 @@
 import { Center, Spinner } from "@chakra-ui/react"
 import { Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
-import { BookingPage } from "./pages/Booking"
 import { CreateAccountPage } from "./pages/CreateAccount"
 import { HomePage } from "./pages/home"
 import { LoginPage } from "./pages/Login"
@@ -27,8 +26,7 @@ export const Router = () => {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/createaccount' element={<CreateAccountPage />} />
         <Route path='/search' element={<SearchPage />} />
-        <Route path='/search/:query' element={<SearchResultPage />} />
-        <Route path='/booking' element={<BookingPage />} />
+        <Route path='/result' element={<SearchResultPage />} />
       </Routes>
     </Suspense>
   )
