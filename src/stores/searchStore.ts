@@ -1,6 +1,6 @@
-import { makeAutoObservable } from "mobx";
-import { runInAction } from "mobx/dist/internal";
-import { getFavoriteTutors } from "../service/beWiselyService";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { getTutorsByQuery } from "../service/beWiselyService";
+import { Tutor } from "../utils/makeData";
 
 export class SearchStore {
   public loading: boolean = false
@@ -8,20 +8,27 @@ export class SearchStore {
     message: '',
     status: false
   };
+  public tutors: Tutor[] = []
+  public actualQuery: string = ''
+  public selectedTutor: Tutor = {} as Tutor;
   constructor() {
     makeAutoObservable(this)
   }
-  public favoriteTutors = []
-  getFavoriteTutors = async (id: number) => {
+
+  getTutorsByQuery = async (query: string) => {
     try {
+      console.log('here')
       runInAction(() => (this.loading = true))
-      const favorites = await getFavoriteTutors(id);
-      runInAction(() => (this.favoriteTutors = favorites))
+      const tutors = getTutorsByQuery(query);
+      console.log(tutors)
+      runInAction(() => (this.tutors = tutors))
+      console.log(toJS(this.tutors))
     } catch (e: any) {
-      console.log(e)
       runInAction(() => (this.error.message = e.message))
       runInAction(() => (this.error.status = e.status))
     } finally {
+      runInAction(() => (this.actualQuery = query))
+      console.log(toJS(this.actualQuery))
       runInAction(() => (this.loading = false))
     }
   }
