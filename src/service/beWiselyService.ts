@@ -13,12 +13,10 @@ export async function authenticate(login: string, password: string) {
     senha: password
   }
   const res = await axios.post('http://localhost:8080/api/auth/login', obj).catch((e) => { return e })
-  console.log(res.response.data)
   return res.response.data
 }
 
 export async function createAccount(user: User) {
   const res = await axios.post('http://localhost:8080/api/auth/registrar', user)
-  console.log(res)
   return res
 }

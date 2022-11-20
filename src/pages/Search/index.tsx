@@ -25,7 +25,7 @@ export const SearchPage = () => {
               />
               <Input type='text' placeholder='Pesquisar' bg={'white'} borderRadius={'full'} value={query} onChange={(e) => setQuery(e.target.value)} />
             </InputGroup>
-            <IconButton icon={<RiSearchLine />} aria-label={"Pesquisar"} borderRadius={'full'} onClick={() => navigate(`/search/query=${query}`)} />
+            <IconButton icon={<RiSearchLine />} aria-label={"Pesquisar"} borderRadius={'full'} onClick={() => navigate(`/result?q=${query}`)} />
           </Flex>
         </Flex>
       </Flex>

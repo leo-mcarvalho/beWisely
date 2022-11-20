@@ -15,12 +15,10 @@ export class AuthStore {
     runInAction(() => (this.error.status = 0))
     runInAction(() => (this.loading = true))
     const res = await authenticate(login, password);
-    console.log(res)
     if (res.status === 200) {
       sessionStorage.setItem('token', res.token)
     } else {
       runInAction(() => (this.error.message = res.erros[0].mensagem))
-      console.log(res.erros[0].mensagem)
       runInAction(() => (this.error.status = res.status))
     }
     runInAction(() => (this.loading = false))

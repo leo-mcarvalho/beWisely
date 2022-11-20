@@ -5,8 +5,10 @@ import beWisely from "../../assets/navbar/beWisely.png"
 import girl from "../../assets/createAccountPage/1 - girl.svg"
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc"
+import { useNavigate } from "react-router-dom"
 
 export const CreateAccountPage = () => {
+  const navigate = useNavigate();
   return (
     <Box>
       <Flex as={'section'} h={'100vh'} direction={'column'}>
@@ -51,7 +53,7 @@ export const CreateAccountPage = () => {
               </InputGroup>
             </Stack>
 
-            <Button bg={'#FD7E50'} color={'#ffffff'} fontFamily={'Lato'} w={'200px'} _hover={{ bg: '#fc9c79' }}>Criar conta</Button>
+            <Button bg={'#FD7E50'} color={'#ffffff'} fontFamily={'Lato'} w={'200px'} _hover={{ bg: '#fc9c79' }} onClick={() => navigate('/')}>Criar conta</Button>
             <Divider />
             <Button leftIcon={<FcGoogle />} bg={'white'} variant={'outline'} fontWeight={200}>Entrar com Google</Button>
 
