@@ -16,12 +16,15 @@
     "dayzed": "^3.2.3",
     "framer-motion": "^6",
     "lodash": "^4.17.21",
-    "mobx": "^6.6.2",
+    "mobx": "^6.7.0",
+    "mobx-react": "^7.6.0",
+    "moment": "^2.29.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.3",
     "react-simple-star-rating": "^5.1.6",
+    "unique-names-generator": "^4.7.1",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
