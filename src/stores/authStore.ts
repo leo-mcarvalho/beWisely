@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { authenticate } from "../service/beWiselyService";
+import { User } from "../interfaces/user";
+import { authenticate, createAccount } from "../service/beWiselyService";
 
 export class AuthStore {
   public loading: boolean = false
@@ -25,16 +26,16 @@ export class AuthStore {
     return res
   }
 
-  createAccount = async () => {
-    try {
-      runInAction(() => (this.loading = true))
-      // const res = ;
-      // return res
-    } catch (e: any) {
-      runInAction(() => (this.error.message = e.message))
-      runInAction(() => (this.error.status = e.status))
-    } finally {
-      runInAction(() => (this.loading = false))
+  createAccount = async (user: User) => {
+    runInAction(() => (this.error.message = ''))
+    runInAction(() => (this.error.status = 0))
+    runInAction(() => (this.loading = true))
+    const res = await createAccount(user);
+    if (res.status !== 200) {
+      runInAction(() => (this.error.message = res.erros[0].mensagem))
+      runInAction(() => (this.error.status = res.status))
     }
+    runInAction(() => (this.loading = false))
+    return res
   }
 }
