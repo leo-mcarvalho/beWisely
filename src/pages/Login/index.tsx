@@ -43,13 +43,13 @@ export const LoginPage = () => {
             <Button bg={'#FFB905'} color={'#ffffff'} fontFamily={'Lato'} w={'200px'} _hover={{ bg: '#ffc531' }}
               onClick={() => store.authenticate(login, password).then(() => {
                 store.error.message != '' ?
-                toast({
-                  title: 'Não foi possível realizar o login',
-                  description: `Código ${store.error.status} - ${store.error.message}`,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                }) : ''
+                  toast({
+                    title: 'Não foi possível realizar o login',
+                    description: `Código ${store.error.status} - ${store.error.message}`,
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                  }) : navigate('/')
               })}>Entrar</Button>
             <Divider />
             <Button bg={'#FD7E50'} color={'#ffffff'} fontFamily={'Lato'} w={'200px'} _hover={{ bg: '#fc9c79' }} onClick={() => navigate('/createaccount')}>Criar conta</Button>

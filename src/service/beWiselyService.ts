@@ -17,6 +17,8 @@ export async function authenticate(login: string, password: string) {
 }
 
 export async function createAccount(user: User) {
-  const res = await axios.post('http://localhost:8080/api/auth/registrar', user)
-  return res
+  user.aluno = true
+  user.professor = false
+  const res = await axios.post('http://localhost:8080/api/usuario/registrar', user).catch((e) => { return e })
+  return res.response.data
 }
